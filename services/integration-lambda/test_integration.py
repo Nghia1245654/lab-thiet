@@ -6,15 +6,15 @@ import pytest
 
 import importlib.util
 # Load index module from local directory dynamically to avoid path conflicts
-spec = importlib.util.spec_from_file_location("index", os.path.join(os.path.dirname(__file__), "index.py"))
+spec = importlib.util.spec_from_file_location("integration_lambda_index", os.path.join(os.path.dirname(__file__), "index.py"))
 index = importlib.util.module_from_spec(spec)
-sys.modules["index"] = index
+sys.modules["integration_lambda_index"] = index
 with patch('boto3.resource'):
     spec.loader.exec_module(index)
 
 @pytest.fixture
 def mock_dynamodb():
-    with patch('index.dynamodb') as mock:
+    with patch('integration_lambda_index.dynamodb') as mock:
         yield mock
 
 def test_handler_missing_incident_id():

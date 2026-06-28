@@ -6,15 +6,15 @@ import pytest
 
 import importlib.util
 # Load index module from local directory dynamically to avoid path conflicts
-spec = importlib.util.spec_from_file_location("index", os.path.join(os.path.dirname(__file__), "index.py"))
+spec = importlib.util.spec_from_file_location("ingest_lambda_index", os.path.join(os.path.dirname(__file__), "index.py"))
 index = importlib.util.module_from_spec(spec)
-sys.modules["index"] = index
+sys.modules["ingest_lambda_index"] = index
 with patch('boto3.client'):
     spec.loader.exec_module(index)
 
 @pytest.fixture
 def mock_sqs():
-    with patch('index.sqs') as mock:
+    with patch('ingest_lambda_index.sqs') as mock:
         yield mock
 
 def test_handler_success(mock_sqs):
